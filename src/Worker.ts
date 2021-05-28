@@ -86,10 +86,10 @@ export class Worker<P extends object> {
     }
     private executeWithTimeout(job: Job<P>, timeout: number) {
       let cancel
-      const promise: CancellablePromise<any> = new Promise(async (resolve, reject) => {
-        const timeoutPromise = new Promise((resolve, reject) => {
+      const promise: CancellablePromise<any> = new Promise<void>(async (resolve, reject) => {
+        const timeoutPromise = new Promise((res, rej) => {
             setTimeout(() => {
-                reject(new Error(`Job ${job.id} timed out`));
+                rej(new Error(`Job ${job.id} timed out`));
             }, timeout);
         });
         const executerPromise = this.executer(job.payload)

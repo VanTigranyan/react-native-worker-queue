@@ -76,7 +76,7 @@ describe('Queue Basics', () => {
           'testWorker',
           (payload) => {
             let cancel
-            const promise: CancellablePromise<any> = new Promise((resolve, reject) => {
+            const promise: CancellablePromise<any> = new Promise<void>((resolve, reject) => {
               const timeout = setTimeout(() => {
                 resolve();
               }, 100);
@@ -138,7 +138,7 @@ describe('Queue Basics', () => {
         };
         const executer = jest.fn(
             () =>
-                new Promise((resolve, reject) => {
+                new Promise<void>((resolve, reject) => {
                     setTimeout(() => {
                         resolve();
                     }, 100);

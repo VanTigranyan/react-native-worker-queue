@@ -247,7 +247,7 @@ export class Queue {
     }
 
     private limitExecution = async (executer: (rawJob: RawJob) => Promise<void>, rawJob: RawJob) => {
-        return new Promise(async (resolve) => await this.enqueueJobExecuter(executer, resolve, rawJob));
+        return new Promise<void>(async (resolve) => await this.enqueueJobExecuter(executer, resolve, rawJob));
     };
 
     private enqueueJobExecuter = async (
