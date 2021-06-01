@@ -1,8 +1,8 @@
 {
-  "name": "react-native-job-queue",
-  "title": "React Native Job Queue",
-  "version": "0.4.0",
-  "description": "TODO",
+  "name": "react-native-worker-queue",
+  "title": "React Native Worker Queue",
+  "version": "0.4.1",
+  "description": "A worker/job queue for React Native",
   "react-native": "src/index.ts",
   "types": "lib/typescript/src",
   "main": "lib/commonjs/index.js",
@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SimonErm/react-native-job-queue.git",
-    "baseUrl": "https://github.com/SimonErm/react-native-job-queue"
+    "url": "git+https://github.com/VanTigranyan/react-native-worker-queue.git",
+    "baseUrl": "https://github.com/VanTigranyan/react-native-worker-queue"
   },
   "keywords": [
     "react-native"
   ],
   "author": {
-    "name": "Simon",
-    "email": "simon_ermler@web.de"
+    "name": "Van",
+    "email": "tigranyan.van@gmail.com"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",
