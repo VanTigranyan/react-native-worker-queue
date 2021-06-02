@@ -1,7 +1,7 @@
 {
   "name": "react-native-worker-queue",
   "title": "React Native Worker Queue",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "A worker/job queue for React Native",
   "react-native": "src/index.ts",
   "types": "lib/typescript/src",
