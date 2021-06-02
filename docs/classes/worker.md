@@ -29,7 +29,7 @@ specifies the Type of the Job-Payload.
 
 ### Accessors
 
-* [availableExecuters](worker.md#availableexecuters)
+* [availableExecutors](worker.md#availableexecuters)
 * [isBusy](worker.md#isbusy)
 
 ### Methods
@@ -92,9 +92,9 @@ ___
 
 ## Accessors
 
-###  availableExecuters
+###  availableExecutors
 
-• **get availableExecuters**(): *number*
+• **get availableExecutors**(): *number*
 
 *Defined in [Worker.ts:68](https://github.com/SimonErm/react-native-job-queue/blob/054fcbe/src/Worker.ts#L68)*
 

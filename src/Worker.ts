@@ -63,14 +63,14 @@ export class Worker<P extends object> {
         return this.executionCount === this.concurrency;
     }
     /**
-     * @returns amount of available Executers for current worker
+     * @returns amount of available Executors for current worker
      */
-    get availableExecuters() {
+    get availableExecutors() {
         return this.concurrency - this.executionCount;
     }
     /**
      * This method should not be invoked manually and is used by the queue to execute jobs
-     * @param job to be executed
+     * @param rawJob
      */
     execute(rawJob: RawJob) {
         const { timeout } = rawJob;

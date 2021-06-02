@@ -74,7 +74,7 @@ export class Queue {
     private updateInterval: number;
     private onQueueFinish: (executedJobs: Array<Job<any>>) => void;
 
-    private queuedJobExecuter: any[] = [];
+    private queuedJobExecutor: any[] = [];
     private runningJobPromises: {[key: string]: any};
 
     private constructor() {
@@ -215,7 +215,7 @@ export class Queue {
       }
     }
     private resetActiveJob = async (job: RawJob) => {
-        this.jobStore.updateJob({ ...job, ...{ active: FALSE } });
+        this.jobStore.updateJob({ ...job, active: FALSE });
     };
     private async resetActiveJobs() {
         const activeMarkedJobs = await this.jobStore.getActiveMarkedJobs();
@@ -231,9 +231,9 @@ export class Queue {
             return;
         }
         const nextJob = await this.jobStore.getNextJob();
-        if (this.isJobNotEmpty(nextJob)) {
+        if (Queue.isJobNotEmpty(nextJob)) {
             const nextJobs = await this.getJobsForWorker(nextJob.workerName);
-            const processingJobs = nextJobs.map(async (job) => this.limitExecution(this.excuteJob, job));
+            const processingJobs = nextJobs.map(async (job) => this.limitExecution(this.executeJob, job));
             await Promise.all(processingJobs);
         } else if (!this.isExecuting()) {
             this.finishQueue();
@@ -242,7 +242,7 @@ export class Queue {
         this.scheduleQueue();
     };
 
-    private isJobNotEmpty(rawJob: RawJob | {}) {
+    private static isJobNotEmpty(rawJob: RawJob | {}) {
         return Object.keys(rawJob).length > 0;
     }
 
@@ -258,7 +258,7 @@ export class Queue {
         if (this.isExecuterAvailable()) {
             await this.runExecuter(executer, resolve, rawJob);
         } else {
-            this.queuedJobExecuter.push(this.runExecuter.bind(null, executer, resolve, rawJob));
+            this.queuedJobExecutor.push(this.runExecuter.bind(null, executer, resolve, rawJob));
         }
     };
 
@@ -267,8 +267,8 @@ export class Queue {
             await executer(rawJob);
         } finally {
             resolve();
-            if (this.queuedJobExecuter.length > 0 && this.isExecuterAvailable()) {
-                await this.queuedJobExecuter.shift()();
+            if (this.queuedJobExecutor.length > 0 && this.isExecuterAvailable()) {
+                await this.queuedJobExecutor.shift()();
             }
         }
     };
@@ -286,9 +286,9 @@ export class Queue {
     }
 
     private async getJobsForWorker(workerName: string) {
-        const { isBusy, availableExecuters } = this.workers[workerName];
+        const { isBusy, availableExecutors } = this.workers[workerName];
         if (!isBusy) {
-            return await this.jobStore.getJobsForWorker(workerName, availableExecuters);
+            return await this.jobStore.getJobsForWorker(workerName, availableExecutors);
         } else {
             return await this.getJobsForAlternateWorker();
         }
@@ -296,10 +296,10 @@ export class Queue {
 
     private async getJobsForAlternateWorker() {
         for (const workerName of Object.keys(this.workers)) {
-            const { isBusy, availableExecuters } = this.workers[workerName];
+            const { isBusy, availableExecutors } = this.workers[workerName];
             let nextJobs: RawJob[] = [];
             if (!isBusy) {
-                nextJobs = await this.jobStore.getJobsForWorker(workerName, availableExecuters);
+                nextJobs = await this.jobStore.getJobsForWorker(workerName, availableExecutors);
             }
             if (nextJobs.length > 0) {
                 return nextJobs;
@@ -308,7 +308,7 @@ export class Queue {
         return [];
     }
 
-    private excuteJob = async (rawJob: RawJob) => {
+    private executeJob = async (rawJob: RawJob) => {
         const worker = this.workers[rawJob.workerName];
         const payload = JSON.parse(rawJob.payload);
         const job = { ...rawJob, ...{ payload } };
@@ -337,7 +337,7 @@ export class Queue {
                 failed = new Date().toISOString();
             }
             const metaData = JSON.stringify({ errors: [...errors, error], failedAttempts });
-            this.jobStore.updateJob({ ...rawJob, ...{ active: FALSE, metaData, failed } });
+            this.jobStore.updateJob({ ...rawJob, active: FALSE, metaData, failed });
         } finally {
             delete this.runningJobPromises[job.id]
             worker.decreaseExecutionCount();
